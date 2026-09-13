@@ -106,6 +106,15 @@
     </ul>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ROS每章节运行代码</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Run_code_for_%20the_%20chapter/turtle_square/">小海龟画正方形</a>
+                  </li>
+              </ul>
       </div>
     </div>
     </nav>
@@ -175,12 +184,15 @@
 <p>请参阅 <a href="../docker/">Docker 开发环境</a> 获取设置说明。提供<a href="../docker/">开发</a>和<a href="../docker_runtime/">运行时</a>两种配置。</p>
 <h3 id="_4">从源码安装</h3>
 <p>安装 HoloOcean 后，将此仓库克隆到您的 ROS 2 工作空间中：
-</p><pre class="highlight"><code class="language-bash">cd ros2_ws/src
-git clone https://github.com/byu-holoocean/holoocean-ros.git
-cd ..
+</p><pre class="highlight"><code class="language-bash">cd ~
+git clone https://github.com/OpenHUTB/ros2.git
+cd ~/ros2/src/water
 source /opt/ros/humble/setup.bash
+conda activate nn_3.8
 colcon build
 source install/setup.bash</code></pre>
+<p>colcon build 报错：ModuleNotFoundError: No module named 'catkin_pkg'
+</p><pre class="highlight"><code class="language-shell"># sudo apt-get install python3-catkin-pkg</code></pre>
 <h2 id="_5">快速入门</h2>
 <pre class="highlight"><code class="language-bash">ros2 launch holoocean_main holoocean_launch.py</code></pre>
 <h2 id="_6">示例</h2>
@@ -353,6 +365,7 @@ source install/setup.bash</code></pre>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../../air/setup_and_connect/" class="btn btn-neutral float-left" title="空域载具"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../ubuntu2004-local-llm-deploy/" class="btn btn-neutral float-right" title="自装ubuntu20.04本地大模型部署教程">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -382,6 +395,8 @@ source install/setup.bash</code></pre>
     
       <span><a href="../../air/setup_and_connect/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
+    
+      <span><a href="../../ubuntu2004-local-llm-deploy/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
