@@ -14,7 +14,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "Ubuntu20.04\u5b89\u88c5ROS";
-        var mkdocs_page_input_path = "ubuntu20.04\u7684Ros\u5b89\u88c5.md";
+        var mkdocs_page_input_path = "ubuntu20.04.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -138,7 +138,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Ubuntu20.04安装ROS</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/template/edit/master/docs/ubuntu20.04的Ros安装.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/OpenHUTB/template/edit/master/docs/ubuntu20.04.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -185,7 +185,7 @@
 <p>添加软件源后，需要导入 ROS 软件包签名密钥，系统借此验证软件包的合法性与完整性：</p>
 <pre class="highlight"><code class="language-bash">sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654</code></pre>
 <p>执行成功后终端会输出公钥导入信息，出现“已导入：1”即表示密钥添加成功，效果如图 1 所示。</p>
-<p><img alt="图1 软件源密钥导入成功" src="../img/ros/01-key-import.png"></p>
+<p><img alt="图1 软件源密钥导入成功" src="../img/ros/01_key_import.png"></p>
 <p>成功输出示例：</p>
 <pre class="highlight"><code class="language-text">Executing: /tmp/apt-key-gpghome.xxx/gpg.1.sh --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 gpg: 密钥 F42ED6FBAB17C654：公钥 "Open Robotics &lt;info@osrfoundation.org&gt;" 已导入
@@ -198,14 +198,14 @@ gpg:               已导入：1</code></pre>
 <p>密钥添加完成后，更新系统本地软件包索引，同步最新软件源信息：</p>
 <pre class="highlight"><code class="language-bash">sudo apt update</code></pre>
 <p>终端会依次列出各软件源的命中情况，结束时提示当前可升级的软件包数量，效果如图 2 所示。</p>
-<p><img alt="图2 更新软件源成功" src="../img/ros/02-apt-update.png"></p>
+<p><img alt="图2 更新软件源成功" src="../img/ros/02_apt_update.png"></p>
 <blockquote>
 <p><strong>提示</strong>：若无线网络下更新很慢、超时或失败，可尝试切换到手机热点后重新执行该命令。</p>
 </blockquote>
 <h2 id="4">4. 软件源错误处理与优化</h2>
 <h3 id="41-no_pubkey">4.1 NO_PUBKEY 签名错误</h3>
 <p>更新软件源时若出现 <code>NO_PUBKEY</code> 签名验证错误，图形界面可能弹出“更新缓存时出错”提示框，提示因缺少公钥无法验证签名，如图 3 所示。</p>
-<p><img alt="图3 NO_PUBKEY 签名错误提示" src="../img/ros/03-no-pubkey.png"></p>
+<p><img alt="图3 NO_PUBKEY 签名错误提示" src="../img/ros/03_no_pubkey.png"></p>
 <p>根据错误提示中的公钥编号，执行以下命令重新导入公钥即可：</p>
 <pre class="highlight"><code class="language-bash">sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654</code></pre>
 <p>完成后再次执行 <code>sudo apt update</code> 更新软件源。</p>
@@ -215,7 +215,7 @@ gpg:               已导入：1</code></pre>
 <p>Ubuntu 20.04 对应的 ROS 版本为 Noetic。执行以下命令安装桌面完整版，其中包含 ROS 核心库、编译构建工具、Gazebo 仿真环境、rviz 可视化工具等全套组件：</p>
 <pre class="highlight"><code class="language-bash">sudo apt install ros-noetic-desktop-full</code></pre>
 <p>终端会先读取软件包列表、分析依赖关系，并列出本次将同时安装的全部软件包，如图 4 所示。确认无误后输入 <code>Y</code> 回车即开始下载安装。</p>
-<p><img alt="图4 安装命令列出的待安装软件包" src="../img/ros/04-install-packages.png"></p>
+<p><img alt="图4 安装命令列出的待安装软件包" src="../img/ros/04_install_packages.png"></p>
 <p><strong>安装过程注意事项：</strong></p>
 <ul>
 <li>桌面完整版总体积约 <strong>568MB</strong>，耗时取决于网络速度，请保持网络稳定。</li>
@@ -223,12 +223,12 @@ gpg:               已导入：1</code></pre>
 <li>若提示部分软件包无法下载，多为网络波动所致，重新执行一次安装命令即可。</li>
 </ul>
 <p>安装结束后，可再次执行一遍安装命令确认。若终端提示 <code>ros-noetic-desktop-full 已经是最新版</code>、新安装 0 个软件包，即说明安装完成，如图 5 所示。</p>
-<p><img alt="图5 再次执行安装命令，提示已是最新版" src="../img/ros/05-already-newest.png"></p>
+<p><img alt="图5 再次执行安装命令，提示已是最新版" src="../img/ros/05_already_newest.png"></p>
 <h2 id="6-rosdep">6. 初始化 rosdep 工具</h2>
 <p><code>rosdep</code> 是 ROS 的依赖管理工具，可在编译源码前自动安装功能包依赖的系统库。安装完成后先进行初始化：</p>
 <pre class="highlight"><code class="language-bash">sudo rosdep init</code></pre>
 <p>初始化成功后，终端会向 <code>/etc/ros/rosdep</code> 写入默认源列表文件，并提示下一步运行 <code>rosdep update</code>，如图 6 所示。</p>
-<p><img alt="图6 rosdep 初始化成功" src="../img/ros/06-rosdep-init.png"></p>
+<p><img alt="图6 rosdep 初始化成功" src="../img/ros/06_rosdep_init.png"></p>
 <p>按提示继续执行更新：</p>
 <pre class="highlight"><code class="language-bash">rosdep update</code></pre>
 <blockquote>
@@ -240,7 +240,7 @@ gpg:               已导入：1</code></pre>
 <p>若终端提示找不到 rosdep 命令，说明系统尚未安装该工具。Ubuntu 20.04 使用 Python3 版本，执行：</p>
 <pre class="highlight"><code class="language-bash">sudo apt install python3-rosdep2</code></pre>
 <p>终端会列出待安装软件包及占用空间，输入 <code>Y</code> 回车继续，如图 7 所示。旧版本 Ubuntu 也可尝试 Python2 版本：<code>sudo apt install python-rosdep2</code>。</p>
-<p><img alt="图7 安装 python3-rosdep2" src="../img/ros/07-install-rosdep2.png"></p>
+<p><img alt="图7 安装 python3-rosdep2" src="../img/ros/07_install_rosdep2.png"></p>
 <p>安装完成后重新执行 <code>sudo rosdep init</code> 即可。</p>
 <h3 id="72">7.2 错误二：无法下载默认源列表</h3>
 <p>若出现如下错误，提示无法从 <code>raw.githubusercontent.com</code> 下载默认源列表，通常是当前网络无法访问 GitHub 原始资源导致：</p>
@@ -289,14 +289,14 @@ Please delete if you wish to re-initialize</code></pre>
 <p><code>rosinstall</code> 是 ROS 生态常用的功能包下载与管理工具集，包含 <code>rosinstall</code>、<code>rosinstall-generator</code>、<code>wstool</code> 等辅助工具，执行以下命令一并安装：</p>
 <pre class="highlight"><code class="language-bash">sudo apt install python3-rosinstall python3-rosinstall-generator python3-wstool</code></pre>
 <p>系统会自动下载并配置相关依赖（含版本控制工具等），安装过程如图 8 所示，等待全部设置完成即可。</p>
-<p><img alt="图8 安装 rosinstall 工具集" src="../img/ros/08-rosinstall.png"></p>
+<p><img alt="图8 安装 rosinstall 工具集" src="../img/ros/08_rosinstall.png"></p>
 <h2 id="10-ros">10. 验证 ROS 是否安装成功</h2>
 <p>完成以上步骤后，通过启动 ROS 核心节点检验安装是否完整、环境是否正确。</p>
 <h3 id="101-roscore">10.1 启动 roscore 核心节点</h3>
 <p>在终端输入以下命令启动 ROS 核心：</p>
 <pre class="highlight"><code class="language-bash">roscore</code></pre>
 <p>正常情况下，终端会依次输出日志检查、roslaunch 服务、版本信息，在 <code>SUMMARY</code> 中列出参数 <code>/rosdistro: noetic</code>，随后自动启动 master 与 rosout 进程，如图 9 所示。看到 <code>started core service [/rosout]</code> 且无红色报错，即说明 ROS 核心环境运行正常。</p>
-<p><img alt="图9 roscore 成功启动" src="../img/ros/09-roscore.png"></p>
+<p><img alt="图9 roscore 成功启动" src="../img/ros/09_roscore.png"></p>
 <h3 id="102">10.2 常见异常与处理</h3>
 <p><strong>异常一：roscore 命令未找到</strong></p>
 <p>若提示 <code>Command 'roscore' not found</code>，说明缺少 roslaunch 组件，按终端提示执行：</p>
@@ -304,7 +304,7 @@ Please delete if you wish to re-initialize</code></pre>
 <p>安装完成后重新执行 <code>roscore</code> 验证。</p>
 <p><strong>异常二：Resource not found: roslaunch</strong></p>
 <p>若终端出现红色的 <code>Resource not found: roslaunch</code> 报错，并提示异常已写入日志文件（如图 10），说明桌面版组件安装不完整，或当前终端未正确加载环境变量。</p>
-<p><img alt="图10 Resource not found 报错及修复命令" src="../img/ros/10-resource-not-found.png"></p>
+<p><img alt="图10 Resource not found 报错及修复命令" src="../img/ros/10_resource_not_found.png"></p>
 <p>先执行以下命令手动加载环境变量后重试：</p>
 <pre class="highlight"><code class="language-bash">source /opt/ros/noetic/setup.bash</code></pre>
 <p>若仍报错，重新执行桌面完整版安装命令补全缺失组件：</p>
@@ -319,7 +319,7 @@ Please delete if you wish to re-initialize</code></pre>
 <p>再按 <code>Ctrl + Alt + T</code> 打开第三个终端，执行：</p>
 <pre class="highlight"><code class="language-bash">rosrun turtlesim turtle_teleop_key</code></pre>
 <p>终端输出 <code>Use arrow keys to move the turtle. 'q' to quit.</code> 后，用鼠标点击选中该终端使其获得焦点，再按 <code>↑</code> <code>↓</code> <code>←</code> <code>→</code> 方向键，即可控制小海龟移动，移动轨迹以白色线条绘制，整体效果如图 11 所示。</p>
-<p><img alt="图11 小海龟仿真：roscore、仿真节点、键盘控制节点协同运行" src="../img/ros/11-turtlesim.png"></p>
+<p><img alt="图11 小海龟仿真：roscore、仿真节点、键盘控制节点协同运行" src="../img/ros/11_turtlesim.png"></p>
 <blockquote>
 <p><strong>结论</strong>：若小海龟能正常响应方向键并绘制轨迹，说明 ROS 节点与话题通信机制工作正常，至此 ROS Noetic 在 Ubuntu 20.04 上的安装与配置全部成功。</p>
 </blockquote>
@@ -335,12 +335,12 @@ Please delete if you wish to re-initialize</code></pre>
 <li><strong>校园网络</strong>：推荐带 <code>.edu</code> 后缀的高校镜像源，如中科大、清华、北外等。</li>
 </ul>
 <p>也可点击“选择最佳服务器”，由系统自动测速推荐最快的服务器。选定后点击“选择服务器”，按提示输入开机密码认证，配置窗口如图 12 所示。</p>
-<p><img alt="图12 “软件和更新”窗口中选择下载服务器" src="../img/ros/12-software-sources.jpg"></p>
+<p><img alt="图12 “软件和更新”窗口中选择下载服务器" src="../img/ros/12_software_sources.jpg"></p>
 <p>下面的动图完整演示了“下载自 → 其他站点 → 选择最佳服务器 → 自动测速”的操作过程（GitHub 页面中会自动播放）：</p>
-<p><img alt="图13 选择下载服务器并自动测速（动态演示）" src="../img/ros/13-select-best-server.gif"></p>
+<p><img alt="图13 选择下载服务器并自动测速（动态演示）" src="../img/ros/13_select_best_server.gif"></p>
 <h3 id="a3">A.3 重新载入软件列表</h3>
 <p>认证完成后关闭“软件和更新”窗口，系统会弹出“更新缓存”提示并自动重新载入软件列表，等待进度条走完、缓存更新完成，新源即生效，过程如图 14 动图所示。最后在终端执行 <code>sudo apt update</code> 确认软件源可正常访问。</p>
-<p><img alt="图14 重新载入软件缓存（动态演示）" src="../img/ros/14-reload-cache.gif"></p>
+<p><img alt="图14 重新载入软件缓存（动态演示）" src="../img/ros/14_reload_cache.gif"></p>
 <hr>
 <h2 id="_1">常见问题速查</h2>
 <table>
