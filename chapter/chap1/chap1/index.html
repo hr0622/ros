@@ -31,7 +31,7 @@
 <a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
         </a><div role="search">
 <form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
-<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+<input aria-label="Search docs" name="q" placeholder="搜索文档" title="Type search term here" type="text"/>
 </form>
 </div>
 </div>
@@ -59,6 +59,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#5">5. 小海龟画花瓣</a>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#6">6. 小海龟画五角星</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#8">8. 小海龟画爱心</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -73,7 +77,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 机械臂控制</a>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. Gazebo阿克曼四轮小车仿真</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
 </li>
@@ -148,7 +152,7 @@
 <li class="breadcrumb-item">ROS 教程</li>
 <li class="breadcrumb-item active">1. 认识 ROS</li>
 <li class="wy-breadcrumbs-aside">
-<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap1/chap1.md"> Edit on GitHub</a>
+<a href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap1/chap1.md"> 编辑页面</a>
 </li>
 </ul>
 <hr/>
@@ -178,20 +182,24 @@
 <h3 id="5">5. 小海龟画花瓣</h3>
 <p>综合 <code>/set_pen</code> 画笔服务、<code>/teleport_absolute</code> 瞬移服务与速度话题发布，
 控制小海龟画出 6 个圆心均匀分布、两两相扣的彩色花瓣。</p>
-<p><a href="../turtle_sim_experiment/">进入小海龟画花瓣实验</a></p></div>
+<p><a href="../turtle_sim_experiment/">进入小海龟画花瓣实验</a></p>
+<h3 id="6">6. 小海龟画五角星</h3>
+<p>使用发布器向<code>/turtle1/cmd_vel</code>话题发布速度指令，使用<code>/turtle1/set_pen</code>服务动态修改画笔RGB颜色，实现彩色绘图，通过定时方式控制海龟直行距离与旋转角度，完成五角星轨迹绘制，使用<code>rosnode</code>、<code>rostopic</code>、<code>rosservice</code>工具查看节点、话题、服务，验证ROS通信。</p>
+<p><a href="../turtle_star/">进入小海龟画五角星实验</a></p>
+<h3 id="8">8. 小海龟画爱心</h3>
+<p>通过爱心参数方程生成轨迹点，控制小海龟绘制出一个完整的爱心图案。</p>
+<p><a href="../turtle_heart/">进入小海龟画爱心实验</a></p></div>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
-<a class="btn btn-neutral float-left" href="../../../ubuntu20.04/" title="安装 ROS"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-<a class="btn btn-neutral float-right" href="../../chap2/" title="2. ROS 基础 - ROS 基础">Next <span class="icon icon-circle-arrow-right"></span></a>
+<a class="btn btn-neutral float-left" href="../../../ubuntu20.04/" title="安装 ROS"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+<a class="btn btn-neutral float-right" href="../../chap2/" title="2. ROS 基础 - ROS 基础">后一页 <span class="icon icon-circle-arrow-right"></span></a>
 </div>
 <hr/>
 <div role="contentinfo">
 <!-- Copyright etc -->
 <p>OpenHUTB 版权所有 © 2026</p>
 </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
 </div>
 </div>
@@ -200,10 +208,10 @@
 <div aria-label="Versions" class="rst-versions" role="note">
 <span class="rst-current-version" data-toggle="rst-current-version">
 <span>
-<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+<a href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc">OpenHUTB</a>
 </span>
-<span><a href="../../../ubuntu20.04/" style="color: #fcfcfc">« Previous</a></span>
-<span><a href="../../chap2/" style="color: #fcfcfc">Next »</a></span>
+<span><a href="../../../ubuntu20.04/" style="color: #fcfcfc">« 前一页</a></span>
+<span><a href="../../chap2/" style="color: #fcfcfc">后一页 »</a></span>
 </span>
 </div>
 <script src="../../../js/jquery-3.6.0.min.js"></script>

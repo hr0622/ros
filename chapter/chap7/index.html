@@ -6,14 +6,14 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="../../img/favicon.ico" rel="shortcut icon"/>
-<title>7. 机械臂控制 - 模拟器的 ROS 文档</title>
+<title>7. Gazebo阿克曼四轮小车仿真 - 模拟器的 ROS 文档</title>
 <link href="../../css/theme.css" rel="stylesheet"/>
 <link href="../../css/theme_extra.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
 <link href="../../extra.css" rel="stylesheet"/>
 <script>
         // Current page data
-        var mkdocs_page_name = "7. \u673a\u68b0\u81c2\u63a7\u5236";
+        var mkdocs_page_name = "7. Gazebo\u963f\u514b\u66fc\u56db\u8f6e\u5c0f\u8f66\u4eff\u771f";
         var mkdocs_page_input_path = "chapter\\chap7.md";
         var mkdocs_page_url = null;
       </script>
@@ -31,7 +31,7 @@
 <a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
         </a><div role="search">
 <form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
-<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+<input aria-label="Search docs" name="q" placeholder="搜索文档" title="Type search term here" type="text"/>
 </form>
 </div>
 </div>
@@ -57,8 +57,90 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../chap6/">6. 机器人 SLAM 与自主导航</a>
 </li>
-<li class="toctree-l1 current"><a class="reference internal current" href="#">7. 机械臂控制</a>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">7. Gazebo阿克曼四轮小车仿真</a>
 <ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#_1">实践环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_2">目录</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#1-gazebo11-ros">1. Gazebo11 安装与 ROS 桥接验证</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2">2. 工程搭建与编译</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#21">2.1 功能包结构</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#22-packagexml-cmakeliststxt">2.2 补齐 package.xml 与 CMakeLists.txt</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#23">2.3 编译</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3-xacro-noetic">3. xacro 旧语法兼容修复（Noetic 必踩）</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4-ros_control">4. 启动仿真与 ros_control 控制器</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#41">4.1 启动</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#42">4.2 可以忽略的报错</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5">5. 键盘控制小车</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6-rviz-tf">6. Rviz 模型显示与前轮 TF 断裂修复</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#61-rviz">6.1 打开 Rviz</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#62-robotmodel">6.2 RobotModel 报错：两个前轮自转关节没有状态</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#63-tf_repeated_data">6.3 但会刷 TF_REPEATED_DATA 警告</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#64">6.4 正确做法：只发布两个前轮的专用节点</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7">7. 激光雷达"自扫"故障排查与修复</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#71">7.1 现象</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#72">7.2 根因：激光打到了自己的外壳</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#73-laser_link-collision-visual-inertial">7.3 修复：删除 laser_link 的 collision（保留 visual 和 inertial）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#74-urdf">7.4 确认运行时加载的是新模型（URDF 只在启动时读取）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#75-gazebo">7.5 打开 Gazebo 射线可视化做直观验证</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#8-rviz">8. Rviz 激光点云可视化</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#81-laserscan">8.1 添加 LaserScan 并设置参数</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#82">8.2 正交俯视图参数</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#83">8.3 点云与障碍物一一对应</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#9">9. 摄像头可视化</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#10-imu">10. IMU 验证</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#11-gazebo">11. Gazebo 使用技巧</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#111">11.1 在线模型库刷不出来怎么办</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#112">11.2 精确移动模型（输入坐标）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#113">11.3 常用显示开关</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#12">12. 完整启动顺序速查</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#13">13. 踩坑清单汇总</a>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../chap8/">8. ROS 机器人综合应用</a>
@@ -132,29 +214,646 @@
 <ul class="wy-breadcrumbs">
 <li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
 <li class="breadcrumb-item">ROS 教程</li>
-<li class="breadcrumb-item active">7. 机械臂控制</li>
+<li class="breadcrumb-item active">7. Gazebo阿克曼四轮小车仿真</li>
 <li class="wy-breadcrumbs-aside">
-<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap7.md"> Edit on GitHub</a>
+<a href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap7.md"> 编辑页面</a>
 </li>
 </ul>
 <hr/>
 </div>
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
-<h1 id="_1"></h1>
+<div><h1 id="ros-noetic-gazebo-11-ackermann">ROS Noetic + Gazebo 11 阿克曼（Ackermann）四轮小车仿真</h1>
+<blockquote>
+<p>本文是我在 Ubuntu 20.04 上从零完成阿克曼四轮小车 Gazebo 仿真的完整实践记录：自己搭建 URDF/xacro 模型与功能包，使用 ros_control 完成速度 / 转向控制，并在 Rviz 中调通<strong>摄像头、激光雷达、IMU</strong> 三个传感器的数据可视化。文中完整记录了从环境安装到三个传感器全部验证通过的过程，以及中间踩过的所有坑和解决办法。</p>
+</blockquote>
+<h2 id="_1">实践环境</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>版本 / 说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Ubuntu 20.04（虚拟机）</td>
+</tr>
+<tr>
+<td>ROS 发行版</td>
+<td>ROS Noetic（<code>rosversion -d</code> 为 noetic，客户端版本 1.17.4）</td>
+</tr>
+<tr>
+<td>物理仿真</td>
+<td>Gazebo 11.15.3（Noetic 自带，<strong>不要装 Gazebo9</strong>）</td>
+</tr>
+<tr>
+<td>可视化</td>
+<td>Rviz 1.14.26</td>
+</tr>
+<tr>
+<td>渲染</td>
+<td>虚拟机 llvmpipe 软渲染（Stereo NOT supported 属正常现象）</td>
+</tr>
+<tr>
+<td>工作空间</td>
+<td><code>~/catkin_ws</code></td>
+</tr>
+<tr>
+<td>功能包</td>
+<td><code>smartcar_description</code>、<code>smartcar_control</code></td>
+</tr>
+</tbody>
+</table>
+<p>工程在工作空间 <code>src/</code> 下分为两个功能包：<code>smartcar_description</code> 负责模型、URDF/xacro、Gazebo 传感器插件、launch 与 Rviz 配置；<code>smartcar_control</code> 负责 ros_control 控制器配置与键盘控制节点。</p>
+<p>最终效果：蓝色阿克曼小车在 Gazebo 中落地，键盘可控制前进、后退、转向；激光雷达扫描点在 Rviz 中与障碍物一一对应，摄像头能拍到车头前方的方块，IMU 以约 100Hz 输出姿态与加速度。</p>
+<hr/>
+<h2 id="_2">目录</h2>
+<ol>
+<li><a href="#1-gazebo11-ros">Gazebo11 安装与 ROS 桥接验证</a></li>
+<li><a href="#2">工程搭建与编译</a></li>
+<li><a href="#3-xacro-noetic">xacro 旧语法兼容修复（Noetic 必踩）</a></li>
+<li><a href="#4-ros_control">启动仿真与 ros_control 控制器</a></li>
+<li><a href="#5">键盘控制小车</a></li>
+<li><a href="#6-rviz-tf">Rviz 模型显示与前轮 TF 断裂修复</a></li>
+<li><a href="#7">激光雷达"自扫"故障排查与修复（重点）</a></li>
+<li><a href="#8-rviz">Rviz 激光点云可视化</a></li>
+<li><a href="#9">摄像头可视化</a></li>
+<li><a href="#10-imu">IMU 验证</a></li>
+<li><a href="#11-gazebo">Gazebo 使用技巧</a></li>
+<li><a href="#12">完整启动顺序速查</a></li>
+<li><a href="#13">踩坑清单汇总</a></li>
+</ol>
+<hr/>
+<h2 id="1-gazebo11-ros">1. Gazebo11 安装与 ROS 桥接验证</h2>
+<p>安装 ROS Noetic 桌面完整版时已经自带 Gazebo11，确认版本：</p>
+<pre class="highlight"><code class="language-bash">gazebo --version
+# 应显示 Gazebo multi-robot simulator, version 11.x.x</code></pre>
+<p>单独启动一次 Gazebo，确认能打开空世界：</p>
+<pre class="highlight"><code class="language-bash">gazebo</code></pre>
+<p><img alt="Gazebo11 空世界首次启动" src="../../img/chapter/01_gazebo_empty_world.png"/></p>
+<p>仅有 Gazebo 还不够，ROS 与 Gazebo 通信需要桥接插件。安装：</p>
+<pre class="highlight"><code class="language-bash">sudo apt update
+sudo apt install ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control</code></pre>
+<p><strong>不要用裸 <code>gazebo</code> 命令启动后再 <code>rosrun</code></strong>：Gazebo 是单例的，先启动的不带 ROS 插件的实例会被复用，导致 ROS 话题注册不上。标准方式是用 launch 启动：</p>
+<pre class="highlight"><code class="language-bash"># roscore 会被自动拉起
+roslaunch gazebo_ros empty_world.launch</code></pre>
+<p>启动时终端应能看到 <code>Loading gazebo_ros_api_plugin</code> 和 <code>gazebo_ros_paths_plugin</code>。新开终端验证话题：</p>
+<pre class="highlight"><code class="language-bash">rostopic list</code></pre>
+<p>出现 <code>/gazebo/model_states</code>、<code>/gazebo/link_states</code>、<code>/clock</code>、<code>/gazebo/set_model_state</code> 等一堆话题，说明 ROS ↔ Gazebo 通信打通：</p>
+<p><img alt="rostopic list 出现 /gazebo/* 话题" src="../../img/chapter/02_rostopic_list.png"/></p>
+<blockquote>
+<p>如果先误启动了裸 Gazebo，执行 <code>killall gzserver gzclient</code> 杀干净，再用 launch 启动。</p>
+</blockquote>
+<hr/>
+<h2 id="2">2. 工程搭建与编译</h2>
+<h3 id="21">2.1 功能包结构</h3>
+<p>在工作空间 <code>src/</code> 下建立两个功能包，目录结构如下：</p>
+<pre class="highlight"><code class="language-text">~/catkin_ws/src/
+├── smartcar_description/   # URDF/xacro 模型、Gazebo 传感器插件、launch、Rviz 配置
+└── smartcar_control/       # ros_control 控制器 yaml、键盘控制节点</code></pre>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws/src
+mkdir -p smartcar_description smartcar_control</code></pre>
+<h3 id="22-packagexml-cmakeliststxt">2.2 补齐 package.xml 与 CMakeLists.txt</h3>
+<p><code>smartcar_description</code> 包需要 catkin 包描述文件，我编写了一个最小可用版本。</p>
+<p><code>smartcar_description/package.xml</code>：</p>
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;package format="2"&gt;
+  &lt;name&gt;smartcar_description&lt;/name&gt;
+  &lt;version&gt;0.0.0&lt;/version&gt;
+  &lt;description&gt;The smartcar_description package&lt;/description&gt;
+  &lt;maintainer email="wkb@todo.todo"&gt;wkb&lt;/maintainer&gt;
+  &lt;license&gt;TODO&lt;/license&gt;
+
+  &lt;buildtool_depend&gt;catkin&lt;/buildtool_depend&gt;
+
+  &lt;exec_depend&gt;urdf&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;xacro&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;joint_state_publisher&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;robot_state_publisher&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;rviz&lt;/exec_depend&gt;
+&lt;/package&gt;</code></pre>
+<p><code>smartcar_description/CMakeLists.txt</code> 最小版本：</p>
+<pre class="highlight"><code class="language-cmake">cmake_minimum_required(VERSION 3.0.2)
+project(smartcar_description)
+
+find_package(catkin REQUIRED)
+
+catkin_package()</code></pre>
+<h3 id="23">2.3 编译</h3>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws
+catkin_make
+source devel/setup.bash</code></pre>
+<p>看到 <code>[100%] Built target smartcar_control_gazebo</code> 即编译成功：</p>
+<p><img alt="catkin_make 编译成功" src="../../img/chapter/03_catkin_make_success.png"/></p>
+<p>建议把 source 写进 <code>~/.bashrc</code>，之后每个新终端自动生效：</p>
+<pre class="highlight"><code class="language-bash">echo "source ~/catkin_ws/devel/setup.bash" &gt;&gt; ~/.bashrc</code></pre>
+<hr/>
+<h2 id="3-xacro-noetic">3. xacro 旧语法兼容修复（Noetic 必踩）</h2>
+<p>工程中的 URDF/xacro 基于较早的 ROS 语法编写，而 Noetic 的 xacro 要求所有 xacro 标签必须带 <strong><code>xacro:</code> 命名空间前缀</strong>，否则启动时报类似错误：</p>
+<pre class="highlight"><code>No link elements found. Check the URDF
+xacro: undefined macro ...</code></pre>
+<p>模型无法加载，spawn_model 节点直接死亡。</p>
+<p>需要修改 <code>urdf/xacro/</code> 下的文件：</p>
+<ol>
+<li><code>&lt;include filename="..."/&gt;</code> 改为 <code>&lt;xacro:include filename="..."/&gt;</code>；</li>
+<li>宏调用如 <code>&lt;cylinder_inertial_matrix .../&gt;</code> 改为 <code>&lt;xacro:cylinder_inertial_matrix .../&gt;</code>（本工程共有 9 处）；</li>
+<li>宏定义 <code>&lt;macro name="..."&gt;</code> 改为 <code>&lt;xacro:macro name="..."&gt;</code>；</li>
+<li>属性定义 <code>&lt;property ...&gt;</code> 改为 <code>&lt;xacro:property ...&gt;</code>。</li>
+</ol>
+<p>入口文件 <code>smartcar.xacro</code> 最终为如下 7 行结构：</p>
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;robot name="smartcar" xmlns:xacro="http://www.ros.org/wiki/xacro"&gt;
+
+  &lt;xacro:include filename="$(find smartcar_description)/urdf/xacro/smartcar_body.xacro" /&gt;
+  &lt;xacro:include filename="$(find smartcar_description)/urdf/xacro/smartcar_sim.xacro" /&gt;
+
+  &lt;xacro:smartcar_body /&gt;
+  &lt;xacro:smartcar_sim /&gt;
+
+&lt;/robot&gt;</code></pre>
+<blockquote>
+<p>排查技巧：可以用 <code>xacro xxx.xacro &gt; /tmp/out.urdf</code> 手动展开，xacro 的语法错误会直接在终端报出具体行号；另外注意 <code>smartcar_body.xacro</code> 里不要残留旧的 <code>&lt;include ...smartcar_sim.xacro&gt;</code> 重复包含。</p>
+</blockquote>
+<hr/>
+<h2 id="4-ros_control">4. 启动仿真与 ros_control 控制器</h2>
+<h3 id="41">4.1 启动</h3>
+<pre class="highlight"><code class="language-bash">source ~/catkin_ws/devel/setup.bash
+roslaunch smartcar_description smartcar_gazebo.launch</code></pre>
+<p>这个 launch 会依次完成：启动 Gazebo 空世界、把 xacro 展开后的 URDF 载入 <code>/robot_description</code>、加载控制器配置 <code>smartcar_joint.yaml</code>、spawn 模型、启动 robot_state_publisher。</p>
+<p>成功的两个关键标志：</p>
+<ol>
+<li>日志出现：</li>
+</ol>
+<pre class="highlight"><code class="language-text">Spawn status: SpawnModel: Successfully spawned entity</code></pre>
+<ol>
+<li>五个控制器全部 <code>Loaded</code> 并 <code>Started</code>：</li>
+</ol>
+<pre class="highlight"><code class="language-text">Loaded controllers: joint_state_controller, rear_right_velocity_controller,
+rear_left_velocity_controller, right_bridge_position_controller,
+left_bridge_position_controller
+Started controllers: ...（同上五个）</code></pre>
+<p><img alt="roslaunch 启动日志：spawn 成功、五个控制器加载" src="../../img/chapter/04_spawn_success_log.png"/></p>
+<p>Gazebo 中出现蓝色阿克曼小车：</p>
+<p><img alt="Gazebo 中的阿克曼小车" src="../../img/chapter/05_car_in_gazebo.png"/></p>
+<h3 id="42">4.2 可以忽略的报错</h3>
+<p>日志里可能有两行红色 ERROR：</p>
+<pre class="highlight"><code class="language-text">[ERROR] No p gain specified for pid.
+Namespace: /gazebo_ros_control/pid_gains/right_back_wheel_joint
+Namespace: /gazebo_ros_control/pid_gains/left_back_wheel_joint</code></pre>
+<p>这是控制器 yaml 中速度环没有配置 PID gain 的老提示，轮子用的是速度接口，<strong>不影响运动控制，实测小车可以正常跑，忽略即可</strong>。</p>
+<hr/>
+<h2 id="5">5. 键盘控制小车</h2>
+<p>新开一个终端：</p>
+<pre class="highlight"><code class="language-bash">source ~/catkin_ws/devel/setup.bash
+roslaunch smartcar_control smartcar_gazebo_controller.launch</code></pre>
+<p>节点启动后持续打印四个轮速 / 转角，静止时全为 0：</p>
+<p><img alt="键盘控制节点待机输出" src="../../img/chapter/06_keyboard_teleop.png"/></p>
+<p><strong>用鼠标点一下该终端窗口</strong>（键盘事件必须被终端接收），并切换到英文输入法，按键如下：</p>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>w</code> / <code>s</code></td>
+<td>前进 / 后退（可连续点按加速）</td>
+</tr>
+<tr>
+<td><code>e</code> / <code>q</code></td>
+<td>前进时左转 / 右转</td>
+</tr>
+<tr>
+<td><code>z</code> / <code>c</code></td>
+<td>后退时左转 / 右转</td>
+</tr>
+<tr>
+<td><code>空格</code></td>
+<td>立即停车</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>退出控制节点</td>
+</tr>
+</tbody>
+</table>
+<p>典型操作：连按几下 <code>w</code> 直线起步 → 按 <code>e</code>/<code>q</code> 转向绕开障碍物 → 空格停车。</p>
+<hr/>
+<h2 id="6-rviz-tf">6. Rviz 模型显示与前轮 TF 断裂修复</h2>
+<h3 id="61-rviz">6.1 打开 Rviz</h3>
+<pre class="highlight"><code class="language-bash">rviz -d $(rospack find smartcar_description)/config/smartcar.rviz</code></pre>
+<p>Rviz 配置文件中 Fixed Frame 为 <code>base_link</code>，默认只带了 Grid、RobotModel、TF 三个显示项。</p>
+<h3 id="62-robotmodel">6.2 RobotModel 报错：两个前轮自转关节没有状态</h3>
+<p>刚打开时 RobotModel 可能是红色 Error。原因是模型里有 6 个非 fixed 关节：</p>
+<ul>
+<li>左右后轮 <code>left/right_back_wheel_joint</code>（continuous，接了 VelocityJointInterface 的 transmission）；</li>
+<li>左右桥转向关节 <code>left/right_bridge...</code>（revolute，接了 EffortJointInterface 的 transmission）；</li>
+<li><strong>两个前轮自转关节 <code>left/right_front_wheel_to_bridge</code>（continuous，没有接 transmission）</strong>。</li>
+</ul>
+<p>Gazebo 的 <code>joint_state_controller</code> 只发布带 transmission 的 4 个关节，两个前轮关节永远没有状态，TF 树在这两处断裂，Rviz 无法拼出完整模型。</p>
+<p>运行官方的 joint_state_publisher 可以临时补全：</p>
+<pre class="highlight"><code class="language-bash">sudo apt install ros-noetic-joint-state-publisher   # 如未安装
+rosrun joint_state_publisher joint_state_publisher</code></pre>
+<p>运行后 RobotModel 变绿、四轮完整：</p>
+<p><img alt="Rviz 中 RobotModel 状态 OK、四轮完整" src="../../img/chapter/08_rviz_robotmodel_ok.png"/></p>
+<h3 id="63-tf_repeated_data">6.3 但会刷 TF_REPEATED_DATA 警告</h3>
+<p>官方 JSP 会把<strong>所有</strong>可动关节（包括 Gazebo 已经在发布的 4 个主动关节）再发一遍，robot_state_publisher 收到重复时间戳的数据后疯狂刷屏：</p>
+<pre class="highlight"><code class="language-text">TF_REPEATED_DATA ignoring data with redundant timestamp for frame
+left_back_wheel (parent base_link) ... according to authority unknown_publisher</code></pre>
+<p><img alt="TF_REPEATED_DATA 重复时间戳警告刷屏" src="../../img/chapter/17_tf_repeated_warning.png"/></p>
+<h3 id="64">6.4 正确做法：只发布两个前轮的专用节点</h3>
+<p>在 <code>smartcar_control/scripts/</code> 下新建 <code>front_wheel_jsp.py</code>，只以 50Hz 发布两个前轮关节的 0 值：</p>
+<pre class="highlight"><code class="language-python">#!/usr/bin/env python3
+import rospy
+from sensor_msgs.msg import JointState
+
+rospy.init_node('front_wheel_jsp')
+pub = rospy.Publisher('/joint_states', JointState, queue_size=10)
+
+m = JointState()
+m.name = ['right_front_wheel_to_bridge', 'left_front_wheel_to_bridge']
+m.position = [0.0, 0.0]
+m.velocity = [0.0, 0.0]
+
+r = rospy.Rate(50)
+while not rospy.is_shutdown():
+    m.header.stamp = rospy.Time.now()
+    pub.publish(m)
+    r.sleep()</code></pre>
+<p>赋可执行权限并运行（Python 脚本无需 catkin_make）：</p>
+<pre class="highlight"><code class="language-bash">chmod +x ~/catkin_ws/src/smartcar_control/scripts/front_wheel_jsp.py
+rosrun smartcar_control front_wheel_jsp.py</code></pre>
+<p><img alt="创建并运行 front_wheel_jsp.py" src="../../img/chapter/18_front_wheel_jsp.png"/></p>
+<p>这个节点只补两个前轮、不碰 Gazebo 负责的 4 个主动关节，刷屏警告消失，RobotModel 四轮完整。<strong>以后用它替代官方 joint_state_publisher。</strong></p>
+<hr/>
+<h2 id="7">7. 激光雷达"自扫"故障排查与修复</h2>
+<p>这是整个工程最隐蔽的一个坑，现象是激光数据看似正常发布，但所有距离值都等于最小量程。</p>
+<h3 id="71">7.1 现象</h3>
+<p>在 Rviz 中 <code>Add → By topic → /laser/scan → LaserScan</code> 后，点云是一团<strong>紧贴车身的红色点团</strong>，而不是周围环境：</p>
+<p><img alt="Rviz 中激光点云紧贴车身（自扫故障）" src="../../img/chapter/09_laserscan_self_hit_rviz.png"/></p>
+<p>话题频率正常（约 40Hz，配置为 40Hz）：</p>
+<p><img alt="rostopic hz /laser/scan 约 40Hz" src="../../img/chapter/25_laser_hz_40.png"/></p>
+<p>但查看最近的 20 个有效回波，全部是 <code>0.10000000149011612</code>，恰好等于雷达配置的 <code>range_min = 0.10m</code>：</p>
+<pre class="highlight"><code class="language-bash">rostopic echo -n 1 /laser/scan/ranges | grep -oE '[0-9]+\.[0-9]+' | sort -n | head -20</code></pre>
+<p><img alt="最近回波全部为 0.1m（range_min）" src="../../img/chapter/10_laserscan_ranges_min.png"/></p>
+<p>720 束激光中有 600 多束都打在了 0.1m 处：</p>
+<pre class="highlight"><code class="language-bash">rostopic echo -n 1 /laser/scan/ranges | grep -oE '[0-9]+\.[0-9]+' | wc -l
+# 655</code></pre>
+<p><img alt="有效回波总数 655" src="../../img/chapter/11_laserscan_valid_count.png"/></p>
+<h3 id="72">7.2 根因：激光打到了自己的外壳</h3>
+<p><code>laser_link</code> 上除了 visual（黑色圆柱外壳）和 inertial 之外，<strong>还自带了一个半径 0.05m、高 0.05m 的圆柱 collision</strong>。而 ray 传感器的原点就在这个圆柱的中心，于是每一束水平射线刚发出来就打在了自己外壳的内壁上，距离被钳位到最小量程 0.1m——相当于雷达一直在"扫描自己"。</p>
+<h3 id="73-laser_link-collision-visual-inertial">7.3 修复：删除 laser_link 的 collision（保留 visual 和 inertial）</h3>
+<p>先备份，再用 sed 只删除 <code>laser_link</code> 链接块内的 collision：</p>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws/src/smartcar_description/urdf/xacro
+cp smartcar_body.xacro smartcar_body.xacro.bak
+
+sed -i '/&lt;link name="laser_link"&gt;/,/&lt;\/link&gt;/ { /&lt;collision&gt;/,/&lt;\/collision&gt;/d }' smartcar_body.xacro</code></pre>
+<p>验证该链接块内 collision 数量为 <strong>0</strong>：</p>
+<pre class="highlight"><code class="language-bash">grep -A15 'name="laser_link"' smartcar_body.xacro | grep -c collision
+# 0</code></pre>
+<p><img alt="验证 laser_link 块内 collision 数量为 0" src="../../img/chapter/12_grep_collision_removed.png"/></p>
+<h3 id="74-urdf">7.4 确认运行时加载的是新模型（URDF 只在启动时读取）</h3>
+<p>URDF 只在 roslaunch 启动时读取一次，<strong>改完文件不彻底重启就不会生效</strong>。重启后可以从参数服务器核对运行时模型：</p>
+<pre class="highlight"><code class="language-bash"># 整个模型的 collision 总数（修复前 15，修复后应为 14）
+rosparam get /robot_description | sed 's/\\n/\n/g' | grep -c "&lt;collision&gt;"
+# 14
+
+# 精确查看 laser_link 块，应只有 visual 和 inertial，没有 collision
+rosparam get /robot_description | sed 's/\\n/\n/g' | awk '/&lt;link name="laser_link"&gt;/,/&lt;\/link&gt;/'</code></pre>
+<p><img alt="运行时模型 collision 总数为 14、laser_link 块无 collision" src="../../img/chapter/13_rosparam_collision_count.png"/></p>
+<blockquote>
+<p>注意：<code>rosparam get /robot_description</code> 输出的是带字面 <code>\n</code> 的单行 YAML，直接管道给 sed/awk 的行范围会吞掉全文，<strong>必须先 <code>sed 's/\\n/\n/g'</code> 还原成多行</strong>。</p>
+</blockquote>
+<p>如果怀疑旧进程残留，彻底杀干净再重启：</p>
+<pre class="highlight"><code class="language-bash">killall gzserver gzclient
+ps aux | grep -E "gzserver|gzclient" | grep -v grep   # 应无输出</code></pre>
+<h3 id="75-gazebo">7.5 打开 Gazebo 射线可视化做直观验证</h3>
+<p>把传感器配置里的 <code>&lt;visualize&gt;</code> 改成 true，可以在 Gazebo 中直接看到每一束射线：</p>
+<pre class="highlight"><code class="language-bash">sed -i 's|&lt;visualize&gt;false&lt;/visualize&gt;|&lt;visualize&gt;true&lt;/visualize&gt;|g' smartcar_sim.xacro
+grep -n visualize smartcar_sim.xacro
+# 摄像头、激光两处均变为 &lt;visualize&gt;true&lt;/visualize&gt;</code></pre>
+<p><img alt="killall 清理进程并打开 visualize" src="../../img/chapter/14_killall_visualize.png"/></p>
+<p>重启仿真后：</p>
+<ul>
+<li><strong>空旷世界</strong>：蓝色射线呈完整的前向 180° 扇形射向远方，最近回波约 <strong>9.17m</strong>（少量水平射线在远处与地面交汇，属正常现象）：</li>
+</ul>
+<p><img alt="空旷世界射线扇形完整，最近回波 9.17m" src="../../img/chapter/15_ray_fan_open.png"/></p>
+<ul>
+<li><strong>放入方块后</strong>：射线在方块位置被切断，方块后方出现楔形盲区阴影，回波距离随方块位置变化（图中约 12.5m）：</li>
+</ul>
+<p><img alt="方块处射线被遮挡形成楔形阴影" src="../../img/chapter/16_ray_fan_box_shadow.png"/></p>
+<p>至此激光自扫故障彻底解决。</p>
+<blockquote>
+<p>收尾时若不想在 Gazebo 中一直看到射线扇形，把 <code>&lt;visualize&gt;</code> 改回 false 再重启即可，不影响话题数据：</p>
+<pre class="highlight"><code class="language-bash">sed -i 's|&lt;visualize&gt;true&lt;/visualize&gt;|&lt;visualize&gt;false&lt;/visualize&gt;|g' smartcar_sim.xacro</code></pre>
+</blockquote>
+<hr/>
+<h2 id="8-rviz">8. Rviz 激光点云可视化</h2>
+<h3 id="81-laserscan">8.1 添加 LaserScan 并设置参数</h3>
+<p><code>Add → By topic → /laser/scan → LaserScan → OK</code>，推荐参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>推荐值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Style</td>
+<td>Flat Squares</td>
+<td>平面方块点</td>
+</tr>
+<tr>
+<td>Size (m)</td>
+<td>0.03（近景）/ 0.2~0.5（远景俯瞰）</td>
+<td>点大小，远景要调大否则只有一个像素</td>
+</tr>
+<tr>
+<td>Color Transformer</td>
+<td>AxisColor，Axis 选 X</td>
+<td>按距离彩虹渐变：近处洋红、远处青蓝</td>
+</tr>
+<tr>
+<td>Position Transformer</td>
+<td>XYZ</td>
+<td></td>
+</tr>
+<tr>
+<td>Use Fixed Frame</td>
+<td>勾选</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Noetic 的 Rviz 没有 RangeColor 选项</strong>，按距离着色用 AxisColor 即可；<code>Use rainbow</code> 复选框只在 IntensityColor 模式下才有。</p>
+</blockquote>
+<h3 id="82">8.2 正交俯视图参数</h3>
+<p>右侧 Views 面板 Type 选 <code>TopDownOrtho</code>（正交俯视），设置以下数值，<strong>每改一个都要按回车确认</strong>：</p>
+<ul>
+<li><code>X</code> = 0，<code>Y</code> = 0（视图中心对准车，车在世界原点）；</li>
+<li><code>Angle</code> = 0；</li>
+<li><code>Scale</code> = 视野覆盖的米数（看全车周围设 8~10，看远处障碍设 20~25）。</li>
+</ul>
+<p>Angle=0 时车头红轴 X 朝向屏幕右方，激光的前向 180° 扇形在右半侧展开，扫描弧在画面中呈竖直走向。</p>
+<h3 id="83">8.3 点云与障碍物一一对应</h3>
+<p>在 Gazebo 中把一个方块放到车头正前方 2m（精确方法见 <a href="#112">11.2 节</a>）：</p>
+<ul>
+<li>Gazebo 中射线在方块处被切断、后方留下楔形阴影；</li>
+<li>Rviz 俯视图中，3 点钟方向（正前方）的扫描弧向车身凸出到 2m 位置，凸出点后面出现缺口。</li>
+</ul>
+<p><img alt="方块放在车头正前方 2m，射线被遮挡" src="../../img/chapter/20_box_at_2m.png"/></p>
+<p>多个方块时，激光扫到方块相邻的正面和侧面，点云会拼出方块角部的 L 形 / F 形轮廓——这正是激光雷达识别障碍物形状的原理：</p>
+<p><img alt="Rviz 俯视图中的方块点云（L/F 形为方块角部轮廓）" src="../../img/chapter/21_rviz_pointcloud_top.png"/></p>
+<p>在 Gazebo 中拖动方块，Rviz 中对应的凸出点会同步移动。调好显示后按 <code>Ctrl+S</code>（<code>File → Save Config</code>）保存配置，下次打开无需重新添加。</p>
+<blockquote>
+<p>视角找不到内容时：把 Type 切回 <code>Orbit</code> 后点 <code>Zero</code> 复位，再用滚轮缩放；俯视图参数输入后必须回车才生效。</p>
+</blockquote>
+<hr/>
+<h2 id="9">9. 摄像头可视化</h2>
+<p>模型中摄像头话题为 <code>/camera/image_raw</code>（800×800，R8G8B8，约 30Hz，frame 为 <code>camera_link</code>）。</p>
+<p>最简单的查看方式：</p>
+<pre class="highlight"><code class="language-bash">rqt_image_view /camera/image_raw</code></pre>
+<p>在下拉框选择 <code>/camera/image_raw</code>，即可看到车头视角画面。下图中正前方 2m 的方块占画面主体，左下角为另一个方块，下方灰色区域为地面：</p>
+<p><img alt="rqt_image_view 中的摄像头画面" src="../../img/chapter/22_camera_rqt.png"/></p>
+<p>也可以在 Rviz 中 <code>Add → By topic → /camera/image_raw → Camera</code>，把图像面板和点云放在同一个界面里。</p>
+<p>验证话题频率：</p>
+<pre class="highlight"><code class="language-bash">rostopic hz /camera/image_raw
+# 平均约 30Hz</code></pre>
+<blockquote>
+<p>虚拟机 llvmpipe 软渲染下偶尔黑屏 / 帧率低是渲染性能问题，只要 <code>rostopic hz</code> 有稳定数据即说明摄像头插件正常。</p>
+</blockquote>
+<hr/>
+<h2 id="10-imu">10. IMU 验证</h2>
+<p>IMU 话题为 <code>/imu</code>（配置 100Hz，frame 为 <code>imu_link</code>）。</p>
+<p>查看频率（虚拟机实时率约 0.9~1.0，实测约 98Hz）：</p>
+<pre class="highlight"><code class="language-bash">rostopic hz /imu</code></pre>
+<p><img alt="rostopic hz /imu 约 98Hz" src="../../img/chapter/23_imu_hz.png"/></p>
+<p>查看一帧数据：</p>
+<pre class="highlight"><code class="language-bash">rostopic echo /imu -n 1</code></pre>
+<p><img alt="rostopic echo /imu 数据" src="../../img/chapter/24_imu_echo.png"/></p>
+<p>静止状态下的正确表现：</p>
+<ul>
+<li><code>angular_velocity</code>（角速度）三个分量均为 1e-6 量级，近似 0；</li>
+<li><code>linear_acceleration</code> 的 <strong>z ≈ 9.8</strong>（重力加速度），x、y 近似 0；</li>
+<li><code>orientation</code> 的 w ≈ 0.9997（车身水平）。</li>
+</ul>
+<p>也可以在 Gazebo 菜单 <code>Window → Topic Visualization</code> 中勾选类型为 <code>gazebo.msgs.IMU</code> 的 <code>/imu</code> 话题，查看实时仪表窗口。</p>
+<hr/>
+<h2 id="11-gazebo">11. Gazebo 使用技巧</h2>
+<h3 id="111">11.1 在线模型库刷不出来怎么办</h3>
+<p>Gazebo 左侧 <code>Insert</code> 面板的在线模型库（models.gazebosim.org / fuel 模型源）在国内网络下经常加载失败，只剩 Ground Plane 和 Sun：</p>
+<p><img alt="Insert 面板在线模型库加载失败，仅有 Ground Plane 和 Sun" src="../../img/chapter/07_insert_online_unavailable.png"/></p>
+<p>不影响做实验，有三种替代方案：</p>
+<ol>
+<li><strong>内置几何体（推荐，离线立即可用，激光同样能扫到）</strong>：点顶部工具栏的立方体 / 球 / 圆柱图标，在地面上点击放置，模型名为 <code>unit_box</code>、<code>unit_box_0</code>……边长约 1m；</li>
+<li><strong>Building Editor 画墙</strong>：菜单 <code>Edit → Building Editor</code>，用 Wall 工具画墙，<code>File → Save As</code> 保存后退出。注意建筑不会自动保存进 world，重启 Gazebo 会消失；</li>
+<li><strong>离线模型库（Gitee 镜像）</strong>：</li>
+</ol>
+<pre class="highlight"><code class="language-bash">mkdir -p ~/.gazebo/models &amp;&amp; cd ~/.gazebo/models
+git clone https://gitee.com/dva7777/gazebo_models.git
+cp -r gazebo_models/* ./</code></pre>
+<p>重启 Gazebo 后 Insert 面板就能看到离线模型。</p>
+<h3 id="112">11.2 精确移动模型（输入坐标）</h3>
+<p>鼠标拖动很难对准位置，推荐直接改位姿：</p>
+<ol>
+<li>左侧 <code>World</code> 标签 → 展开 <code>Models</code> → 点击模型名（如 <code>unit_box</code>）；</li>
+<li>左下方 Property 面板里点 <code>pose</code> 左边的小三角展开；</li>
+<li>填写 <code>x</code>、<code>y</code>、<code>z</code>（每改一个按回车）。</li>
+</ol>
+<p><img alt="在 pose 面板中输入模型坐标" src="../../img/chapter/19_gazebo_pose_panel.png"/></p>
+<p>车在世界原点、车头朝 X 正方向。边长 1m 的方块要贴地放在车头正前方 2m，填 <code>x=2, y=0, z=0.5</code>（z 是方块中心高度）。</p>
+<p>鼠标拖动方式：顶部工具栏选 Translate（十字箭头图标，快捷键 <code>Ctrl+T</code>）→ 点击模型出现红 / 绿 / 蓝三轴 → 按住某条轴拖动即沿该轴平移。</p>
+<p>删除模型：选中后按 <code>Delete</code> 键。</p>
+<h3 id="113">11.3 常用显示开关</h3>
+<ul>
+<li><code>Ctrl+G</code>：显示 / 隐藏 collision 碰撞体；</li>
+<li><code>Ctrl+W</code>：线框模式；</li>
+<li><code>Ctrl+T</code>：透明模式。</li>
+</ul>
+<hr/>
+<h2 id="12">12. 完整启动顺序速查</h2>
+<p>每次做实验按以下顺序开终端（每个终端先确保 <code>source ~/catkin_ws/devel/setup.bash</code>）：</p>
+<pre class="highlight"><code class="language-bash"># 终端 1：启动 Gazebo + ros_control 控制器 + 加载模型
+roslaunch smartcar_description smartcar_gazebo.launch
+
+# 终端 2：补全两个前轮的关节状态（替代官方 joint_state_publisher）
+rosrun smartcar_control front_wheel_jsp.py
+
+# 终端 3：Rviz（模型 + 激光点云）
+rviz -d $(rospack find smartcar_description)/config/smartcar.rviz
+
+# 终端 4：键盘控制（需要开车时）
+roslaunch smartcar_control smartcar_gazebo_controller.launch
+
+# 终端 5：摄像头画面（需要时）
+rqt_image_view /camera/image_raw</code></pre>
+<p>传感器话题一览：</p>
+<table>
+<thead>
+<tr>
+<th>传感器</th>
+<th>话题</th>
+<th>类型</th>
+<th>频率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>激光雷达</td>
+<td><code>/laser/scan</code></td>
+<td>sensor_msgs/LaserScan</td>
+<td>~40Hz，720 束，前向 180°，量程 0.1~30m</td>
+</tr>
+<tr>
+<td>摄像头</td>
+<td><code>/camera/image_raw</code></td>
+<td>sensor_msgs/Image</td>
+<td>~30Hz，800×800</td>
+</tr>
+<tr>
+<td>摄像头标定</td>
+<td><code>/camera/camera_info</code></td>
+<td>sensor_msgs/CameraInfo</td>
+<td>~30Hz</td>
+</tr>
+<tr>
+<td>IMU</td>
+<td><code>/imu</code></td>
+<td>sensor_msgs/Imu</td>
+<td>~100Hz</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="13">13. 踩坑清单汇总</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>现象</th>
+<th>原因</th>
+<th>解决办法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>rostopic list</code> 只有 <code>/rosout</code></td>
+<td>裸 <code>gazebo</code> 启动的实例没加载 ROS 插件，且被单例复用</td>
+<td><code>killall gzserver gzclient</code>，改用 <code>roslaunch gazebo_ros empty_world.launch</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Gazebo 版本不对</td>
+<td>误装 gazebo9</td>
+<td>Noetic 必须配套 Gazebo11，不要混装</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>No link elements found</code>、spawn 失败</td>
+<td>旧 xacro 标签缺 <code>xacro:</code> 前缀</td>
+<td>include / macro / 宏调用全部加 <code>xacro:</code> 前缀</td>
+</tr>
+<tr>
+<td>4</td>
+<td>整个模型链接数为 0</td>
+<td>body 文件残留旧 include、入口 xacro 编写时混入空行 / 折行</td>
+<td>重写 7 行入口 xacro；长文件用 heredoc 创建</td>
+</tr>
+<tr>
+<td>5</td>
+<td>RobotModel 红色 Error</td>
+<td>两个前轮自转关节无 transmission、无状态发布</td>
+<td>运行 <code>front_wheel_jsp.py</code> 只补两个前轮</td>
+</tr>
+<tr>
+<td>6</td>
+<td>终端狂刷 TF_REPEATED_DATA</td>
+<td>官方 JSP 重复发布 Gazebo 已负责的 4 个主动关节</td>
+<td>弃用 JSP，改用只发前轮的专用节点</td>
+</tr>
+<tr>
+<td>7</td>
+<td>激光点云紧贴车身、回波全是 0.1m</td>
+<td>laser_link 自带圆柱 collision，射线自扫外壳</td>
+<td>删除 laser_link 块内的 collision，保留 visual/inertial</td>
+</tr>
+<tr>
+<td>8</td>
+<td>改了 xacro 但故障依旧</td>
+<td>URDF 仅启动时读取，旧 gzserver 残留</td>
+<td><code>killall gzserver gzclient</code> 后重新 roslaunch</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>rosparam get robot_description</code> 管道 sed 后内容不对</td>
+<td>输出是带字面 <code>\n</code> 的单行 YAML</td>
+<td>先 <code>sed 's/\\n/\n/g'</code> 还原再处理</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Rviz 找不到 RangeColor</td>
+<td>Noetic 本就没有该选项</td>
+<td>用 AxisColor（Axis 选 X）</td>
+</tr>
+<tr>
+<td>11</td>
+<td>俯视图只有一小块网格 / 看不到点</td>
+<td>TopDownOrtho 的 X/Y/Scale 没对准、没回车</td>
+<td>X=0、Y=0、Scale=8~25，每个值输入后回车</td>
+</tr>
+<tr>
+<td>12</td>
+<td>点在远处只有一个像素</td>
+<td>Size 太小、视角太远</td>
+<td>Size 调到 0.2~0.5，或切 Orbit 后 Zero 复位</td>
+</tr>
+<tr>
+<td>13</td>
+<td>键盘控制没反应</td>
+<td>终端没获得焦点 / 中文输入法</td>
+<td>点一下终端窗口，切英文输入法</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Insert 面板刷不出在线模型</td>
+<td>国内网络访问不了模型源</td>
+<td>用内置几何体、Building Editor 或 Gitee 离线模型库</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>No p gain specified for pid</code> 两行 ERROR</td>
+<td>控制器 yaml 速度环未配 gain</td>
+<td>不影响运动，忽略</td>
+</tr>
+<tr>
+<td>16</td>
+<td>提示 <code>Stereo NOT supported</code>、OpenGL llvmpipe</td>
+<td>虚拟机软渲染</td>
+<td>正常现象，不影响功能</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<p>至此，阿克曼小车的 Gazebo 仿真、ros_control 键盘控制以及摄像头 / 激光雷达 / IMU 三个传感器的仿真与 Rviz 可视化全部跑通。</p></div>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
-<a class="btn btn-neutral float-left" href="../chap6/" title="6. 机器人 SLAM 与自主导航"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-<a class="btn btn-neutral float-right" href="../chap8/" title="8. ROS 机器人综合应用">Next <span class="icon icon-circle-arrow-right"></span></a>
+<a class="btn btn-neutral float-left" href="../chap6/" title="6. 机器人 SLAM 与自主导航"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+<a class="btn btn-neutral float-right" href="../chap8/" title="8. ROS 机器人综合应用">后一页 <span class="icon icon-circle-arrow-right"></span></a>
 </div>
 <hr/>
 <div role="contentinfo">
 <!-- Copyright etc -->
 <p>OpenHUTB 版权所有 © 2026</p>
 </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
 </div>
 </div>
@@ -163,10 +862,10 @@
 <div aria-label="Versions" class="rst-versions" role="note">
 <span class="rst-current-version" data-toggle="rst-current-version">
 <span>
-<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+<a href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc">OpenHUTB</a>
 </span>
-<span><a href="../chap6/" style="color: #fcfcfc">« Previous</a></span>
-<span><a href="../chap8/" style="color: #fcfcfc">Next »</a></span>
+<span><a href="../chap6/" style="color: #fcfcfc">« 前一页</a></span>
+<span><a href="../chap8/" style="color: #fcfcfc">后一页 »</a></span>
 </span>
 </div>
 <script src="../../js/jquery-3.6.0.min.js"></script>
